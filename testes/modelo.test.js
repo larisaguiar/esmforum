@@ -23,3 +23,51 @@ test('Testando cadastro de três perguntas', () => {
   expect(perguntas[2].num_respostas).toBe(0);
   expect(perguntas[1].id_pergunta).toBe(perguntas[2].id_pergunta-1);
 });
+
+test('Cadastrar pergunta', () => {
+  const texto = 'Qual é a capital da França?';
+  
+  modelo.cadastrar_pergunta(texto);
+  const perguntas = modelo.listar_perguntas();
+  
+  expect(perguntas.length).toBe(1); // Espera que haja 1 pergunta
+  expect(perguntas[0].texto).toBe(texto); // Verifica se a pergunta cadastrada tem o texto correto
+});
+test('Listar perguntas', () => {
+  modelo.cadastrar_pergunta('Pergunta 1');
+  modelo.cadastrar_pergunta('Pergunta 2');
+  
+  const perguntas = modelo.listar_perguntas();
+  
+  expect(perguntas.length).toBe(2); // Espera 2 perguntas cadastradas
+  expect(perguntas[0].texto).toBe('Pergunta 1');
+  expect(perguntas[1].texto).toBe('Pergunta 2');
+});
+test('Cadastrar e listar respostas', () => {
+  modelo.cadastrar_pergunta('O que é JavaScript?');
+  
+  const pergunta = modelo.listar_perguntas()[0]; // Pega a primeira pergunta cadastrada
+  
+  modelo.cadastrar_resposta(pergunta.id_pergunta, 'É uma linguagem de programação.');
+  
+  // Verifica se a resposta foi cadastrada
+  const respostas = modelo.listar_respostas(pergunta.id_pergunta);
+  
+  expect(respostas.length).toBe(1); // Espera 1 resposta cadastrada
+  expect(respostas[0].texto).toBe('É uma linguagem de programação.');
+});
+
+test('Número de respostas', () => {
+  modelo.cadastrar_pergunta('Quanto é 2 + 2?');
+  
+  const pergunta = modelo.listar_perguntas()[0];
+  
+  // Cadastra 2 respostas
+  modelo.cadastrar_resposta(pergunta.id_pergunta, 'É 4');
+  modelo.cadastrar_resposta(pergunta.id_pergunta, 'É quatro');
+  
+  // Verifica o número de respostas
+  const numRespostas = modelo.get_num_respostas(pergunta.id_pergunta);
+  
+  expect(numRespostas).toBe(2); // Espera 2 respostas
+});
